@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Application</title>
+    <link rel="stylesheet"href="style.css">
+</head>
+<body>
+    <h1>WEATHER APP</h1>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter city name"
+            spellcheck="false">
+            <button><img src="https://tse4.mm.bing.net/th?id=OIP.ktxAu_6vg1RhQ3hkV-A83QHaHa&pid=Api&P=0&h=220"></button>
+        </div>
+        <div class="error">
+            <p>Inavalid City Name</p>
+        </div>
+        <div class="weather">
+            <img src="https://static.vecteezy.com/system/resources/previews/012/066/505/non_2x/sunny-and-rainy-day-weather-forecast-icon-meteorological-sign-3d-render-png.png" class="weather-icon">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">New York</h2>
+            <div class="details">
+                <div class="col">
+                    <img src="https://tse4.mm.bing.net/th?id=OIP.xYJAvJ0VI3dodePpPcPh7gHaHa&pid=Api&P=0&h=220">
+                    <div>
+                        <p class="humidity">50%</p>
+                        <p>Humidity</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="https://tse3.mm.bing.net/th?id=OIP.pSukzeFIa-a3AFJw_4RviAHaHa&pid=Api&P=0&h=220">
+                    <div>
+                        <p class="wind">15 km/hr</p>
+                        <p>Wind Speed</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        const apiKey="ba95bab5c32ec6b4c9de95d33fa0391f";
+        const apiUrl="https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+        const searchBox = document.querySelector(".search input");
+        const searchBtn = document.querySelector(".search button");
+        const weatherIcon= document.querySelector(".weather-icon");
+
+        async function checkWeather(city){
+            const response=await fetch(apiUrl + city + `&appid=${apiKey}`);
+
+            if(response.status==404){
+                document.querySelector(".error").style.display="block";
+                document.querySelector(".weather").style.display="none";
+            }
+            else{
+            var data =await response.json();
+
+            
+            document.querySelector(".city").innerHTML= data.name;
+            document.querySelector(".temp").innerHTML= Math.round(data.main.temp) +"°C";
+            document.querySelector(".humidity").innerHTML= data.main.humidity +"%";
+            document.querySelector(".wind").innerHTML= data.wind.speed +"km/hr";
+
+
+            if(data.weather[0].main=="Clouds"){
+                weatherIcon.src="https://tse3.mm.bing.net/th?id=OIP.3L-IwGjVAfLt8SXlw4-BTQHaF7&pid=Api&P=0&h=220"
+            }
+            else if(data.weather[0].main=="Rain"){
+                weatherIcon.src="https://tse2.mm.bing.net/th?id=OIP.0OqtSn7BcN8r__X4aYkgcgHaFQ&pid=Api&P=0&h=220"
+            }
+            else if(data.weather[0].main=="Drizzle"){
+                weatherIcon.src="https://tse4.mm.bing.net/th?id=OIP.cqlFYiy8S2EiTUbO6TLXVAHaHa&pid=Api&P=0&h=220"
+            }
+            else if(data.weather[0].main=="Mist"){
+                weatherIcon.src="https://tse1.mm.bing.net/th?id=OIP.aA6Wg4-QUH5qcZnXXeBRxAHaHa&pid=Api&P=0&h=220"
+            }
+            
+            document.querySelector(".weather").style.display="block";
+            document.querySelector(".error").style.display="none";
+            
+        }
+
+        }
+
+        searchBtn.addEventListener("click",()=>{
+            checkWeather(searchBox.value);
+        })
+        
+    </script>
+    
+</body>
+</html>
